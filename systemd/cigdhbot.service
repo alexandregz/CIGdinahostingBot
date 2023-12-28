@@ -1,0 +1,22 @@
+[Unit]
+Description=CLI CIGdhBot
+After=network.target
+
+[Service]
+User=pi
+Type=simple
+
+WorkingDirectory=/home/pi/FP_SAN_CLEMENTE_proxecto_DAM_distancia
+EnvironmentFile=/home/pi/FP_SAN_CLEMENTE_proxecto_DAM_distancia/add_api_token_to_env_systemd.sh
+ExecStart=/bin/sh -c "/home/pi/FP_SAN_CLEMENTE_proxecto_DAM_distancia/cigdhbot_raspberry -debug Debug >> /var/log/cigdhbot/cigdhbot.log 2>&1"
+StandardError=journal
+
+Restart=on-failure
+RestartSec=5
+Nice=19
+
+#MemoryMax=30M
+#CPUQuota=50%
+
+[Install]
+WantedBy=multi-user.target
