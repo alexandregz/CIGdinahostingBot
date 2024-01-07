@@ -27,6 +27,7 @@ import (
 	"log/slog"
 	"os"
 	"path"
+	dbg "runtime/debug"
 	"strconv"
 
 	"github.com/alexandregz/CIGdinahostingBot/src/bot"
@@ -153,7 +154,24 @@ func main() {
 			if update.Message == nil { // ignore any non-Message updates
 				continue
 			}
-			go handlers.HandleUpdate(update) // desplegamos nunha goroutine para atender a varios usuarios concurrentes
+
+			// control de posibles panic():
+			go func() {
+				defer func() {
+					if r := recover(); r != nil {
+						//	1) log de todo o stack
+						slog.Info("goroutine paniqued: ", r)
+						slog.Info("Stack: ", string(dbg.Stack()))
+
+						//  2) envio msg a superadmin e a usuario de que non se puido tramitar a orde
+						senders.SendMsgHTMLChatID(user.GetSuperAdmin(), fmt.Sprintf("[%s] panic en comando, revisar!:\n\n<i>%s</i>", PACKAGE_NAME, dbg.Stack()))
+						senders.SendMsgHTMLChatID(update.Message.From.ID, "Erro ao executar comando, contacta cun administrador!")
+					}
+				}()
+
+				handlers.HandleUpdate(update)
+			}()
+
 		}
 	}
 }
