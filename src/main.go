@@ -33,6 +33,7 @@ import (
 	"github.com/alexandregz/CIGdinahostingBot/src/canle"
 	"github.com/alexandregz/CIGdinahostingBot/src/handlers"
 	"github.com/alexandregz/CIGdinahostingBot/src/providers"
+	"github.com/alexandregz/CIGdinahostingBot/src/senders"
 	"github.com/alexandregz/CIGdinahostingBot/src/user"
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
@@ -141,7 +142,7 @@ func main() {
 	u := tgbotapi.NewUpdate(0)
 	u.Timeout = 60
 
-	//senders.SendMsgHTMLChatID(user.GetSuperAdmin(), fmt.Sprintf("[%s] Arrancando...", PACKAGE_NAME))
+	senders.SendMsgHTMLChatID(user.GetSuperAdmin(), fmt.Sprintf("[%s] Arrancando...", PACKAGE_NAME))
 
 	// `updates` is a golang channel which receives telegram updates
 	updates := botTG.GetUpdatesChan(u)
